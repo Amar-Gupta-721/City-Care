@@ -10,7 +10,7 @@ function Register() {
   const [success, setsuccess] = useState('');
   const navigate = useNavigate();
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/';
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/';
 
   const handleSubmit = async (e) => {
   e.preventDefault();
@@ -48,6 +48,7 @@ function Register() {
       seterror(data.error || 'Registration failed');
     }
   } catch (err) {
+    console.log(error);
     seterror('Registration failed. Please try again.');
   }
 };
