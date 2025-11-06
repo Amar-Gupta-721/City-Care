@@ -89,7 +89,7 @@ function Complaints() {
 
       try {
         const controller = new AbortController();
-        const response = await fetch(`${BASE_URL}complaint`, {
+        const response = await fetch(`${BASE_URL}complaints/`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
