@@ -22,11 +22,22 @@ function OfficerRegister() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${BASE_URL}officerRegister`, {
+      // const res = await fetch(`${BASE_URL}officerRegister`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email, password, role : "officer" }),
+      // });
+
+      const res = await fetch(`${BASE_URL}officers/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role : "officer" }),
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+        // body: JSON.stringify({ phone, departmentId }),
+        body: JSON.stringify({ email, password, role: "officer" }),
       });
+
 
       const data = await res.json();
 
@@ -35,7 +46,7 @@ function OfficerRegister() {
         localStorage.setItem("token", data.token);
         console.log
         setTimeout(() => {
-          navigate('/officer/onboarding');
+          navigate('/officers/onboarding');
         }, 1000);
       } else {
         setError(data.message || 'Registration failed');

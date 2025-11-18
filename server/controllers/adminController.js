@@ -1,5 +1,4 @@
 // server/controllers/adminController.js
-// minimal admin helpers: get stats, accept/deny officer requests delegated to officerController
 import Complaint from '../models/Complaint.js';
 import Officer from '../models/Officer.js';
 import User from '../models/User.js';

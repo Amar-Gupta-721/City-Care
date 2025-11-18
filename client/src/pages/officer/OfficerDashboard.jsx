@@ -40,7 +40,8 @@ const OfficerDashboard = () => {
     }
 
     try {
-      const res = await fetch(`${BASE_URL}officer/profile`, {
+      // const res = await fetch(`${BASE_URL}officer/profile`, {
+      const res = await fetch(`${BASE_URL}officers/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

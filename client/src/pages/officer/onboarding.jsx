@@ -3,14 +3,32 @@ import React, { useState, useEffect } from "react";
 const OfficerOnboarding = () => {
   const [formData, setFormData] = useState({
     username: "",
-    department: "",
+    // department: "",
+    departmentId: "",
     phone: "",
     sector: "",
   });
 
+  // const [idImage, setIdImage] = useState(null);
+  // const [previewUrl, setPreviewUrl] = useState(null);
+  // const token = localStorage.getItem("token");
+
+
+  const [departments, setDepartments] = useState([]);
   const [idImage, setIdImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
   const token = localStorage.getItem("token");
+
+   useEffect(() => {
+    // ✅ Load department list from backend
+    const fetchDepartments = async () => {
+      const res = await fetch(`${BASE_URL}departments/`);
+      const data = await res.json();
+      setDepartments(data.departments || []);
+    };
+    fetchDepartments();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,14 +62,20 @@ const OfficerOnboarding = () => {
     e.preventDefault();
 
     const form = new FormData();
-    form.append("username", formData.username);
-    form.append("department", formData.department);
+    // form.append("username", formData.username);
+    // form.append("department", formData.department);
+    // form.append("phone", formData.phone);
+    // form.append("sector", formData.sector);
+    // if (idImage) form.append("id_image", idImage);
+
+    form.append("name", formData.name);
+    form.append("department", formData.departmentId);
     form.append("phone", formData.phone);
     form.append("sector", formData.sector);
-    if (idImage) form.append("id_image", idImage);
+    if (idImage) form.append("idImage", idImage); // ✅ Correct name
 
     try {
-      const res = await fetch(`${BASE_URL}officer/onboard/`, {
+      const res = await fetch(`${BASE_URL}officers/onboarding`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,16 +89,17 @@ const OfficerOnboarding = () => {
 
       alert("Officer onboarded successfully!");
 
-      setFormData({
-        username: "",
-        department: "",
-        phone: "",
-        sector: "",
-      });
-      setIdImage(null);
-      setPreviewUrl(null);
+      // setFormData({
+      //   username: "",
+      //   department: "",
+      //   phone: "",
+      //   sector: "",
+      // });
+      // setIdImage(null);
+      // setPreviewUrl(null);
 
-      localStorage.setItem("officerId", data.user_id);
+      // localStorage.setItem("officerId", data.user_id);
+      localStorage.setItem("officerId", data.officerId);
       window.location.href = "/officer/dashboard";
     } catch (error) {
       console.error("Error:", error.message);

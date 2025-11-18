@@ -207,12 +207,12 @@ function Dashboard() {
                 className="border-t py-3 first:border-t-0 flex justify-between items-start"
               >
                 <div>
-                  <p className="text-sm text-gray-500"> Complaint Code #{c.ID}</p>
+                  <p className="text-sm text-gray-500"> Complaint Code #{c._id}</p>
                   <p className="font-semibold">{c.Title}</p>
                   <p className="text-sm text-gray-500">Department: {c.Department}</p>
                   <button
                     onClick={() => {
-                      setToDeleteId(c.ID);
+                      setToDeleteId(c._id);
                       setShowConfirm(true);
                     }}
                     className="text-sm font-mono text-red-600 mt-1 hover:underline"
@@ -233,7 +233,7 @@ function Dashboard() {
                     {c.Status}
                   </span>
                   <p className="text-xs text-gray-400 mt-1">
-                    {new Date(c.CreatedAt).toLocaleDateString()}
+                    {new Date(c.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </div>
