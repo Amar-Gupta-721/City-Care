@@ -46,7 +46,8 @@ function OfficerRegister() {
         localStorage.setItem("token", data.token);
         console.log
         setTimeout(() => {
-          navigate('/officers/onboarding');
+          // navigate('/officers/onboarding');
+          navigate('/officer/onboarding');
         }, 1000);
       } else {
         setError(data.message || 'Registration failed');

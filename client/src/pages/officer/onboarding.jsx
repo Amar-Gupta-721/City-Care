@@ -69,7 +69,8 @@ const OfficerOnboarding = () => {
     // if (idImage) form.append("id_image", idImage);
 
     form.append("name", formData.name);
-    form.append("department", formData.departmentId);
+    // form.append("department", formData.departmentId);
+    form.append("departmentId", formData.departmentId);
     form.append("phone", formData.phone);
     form.append("sector", formData.sector);
     if (idImage) form.append("idImage", idImage); // ✅ Correct name
@@ -83,9 +84,18 @@ const OfficerOnboarding = () => {
         body: form,
       });
 
-      const data = await res.json();
+      // const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Submission failed");
+      let data;
+try {
+  data = await res.json();
+  console.log("Response Data:", data);
+} catch (e) {
+  console.error("Failed to parse JSON:", e);
+}
+
+
+      if (!res.ok) throw new Error(data.message  || "Submission failed");
 
       alert("Officer onboarded successfully!");
 
