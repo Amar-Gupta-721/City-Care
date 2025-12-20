@@ -7,34 +7,6 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
-// export const registerOfficer = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     const exists = await User.findOne({ email });
-//     if (exists) return res.status(400).json({ message: "Email already exists" });
-
-//     const hashed = await bcrypt.hash(password, 10);
-
-//     const user = await User.create({
-//       email,
-//       password: hashed,
-//       role: "officer",
-//       name: "Officer"
-//     });
-
-//     const token = generateToken(user._id);
-
-//     res.status(201).json({
-//       message: "Officer registered successfully",
-//       token,
-//       user: { id: user._id, email: user.email, role: user.role }
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// };
-
 // REGISTER OFFICER (direct approval)
 export const registerOfficer = async (req, res) => {
   try {
@@ -54,9 +26,9 @@ export const registerOfficer = async (req, res) => {
 
     await Officer.create({
       user: user._id,
-      phone,
-      department: departmentId,
-      approved: true
+      // phone,
+      // department: departmentId,
+      approved: false
     });
 
     const token = generateToken(user._id);
@@ -73,34 +45,103 @@ export const registerOfficer = async (req, res) => {
   }
 };
 
-
 export const officerOnboarding = async (req, res) => {
   try {
-    const { phone, departmentId } = req.body;
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
-    const existing = await Officer.findOne({ user: req.user._id });
-    if (existing) return res.status(400).json({ message: "Request already submitted!" });
+    const { name, phone, departmentId, sector } = req.body;
 
-    const newRequest = await Officer.create({
-      user: req.user._id,
-      phone,
-      department: departmentId,
-      approved: false
+    const officer = await Officer.findOne({ user: req.user._id });
+
+    if (!officer) {
+      return res.status(404).json({ message: "Officer account not found!" });
+    }
+
+    // Update officer data
+    officer.phone = phone;
+    officer.department = departmentId;
+    officer.sector = sector;
+    officer.approved = true;
+    if (req.file) {
+      officer.idImage = req.file.filename;
+    }
+
+    // Update user name also
+    await User.findByIdAndUpdate(req.user._id, { name });
+
+    await officer.save();
+
+    res.status(200).json({ 
+      message: "Onboarding details saved successfully!", 
+      officer 
+      // officerId: officer._id   // ✅ FIX
     });
 
-    res.status(201).json({ message: "Officer request submitted", newRequest });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// export const getOfficerProfile = async (req, res) => {
-//   const officer = await Officer.findOne({ user: req.user._id })
-//     .populate("department", "name")
-//     .populate("user", "name email role");
+export const officerLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-//   res.json({ officer });
-// };
+    // 1. Check user
+    const user = await User.findOne({ email, role: "officer" });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // 2. Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // 3. Check officer profile
+    const officer = await Officer.findOne({ user: user._id });
+    if (!officer) {
+      return res.status(403).json({ message: "Officer profile not found" });
+    }
+
+    // 4. Token
+    const token = generateToken(user._id);
+
+    // 5. Approved check
+    // ❗ Not approved → allow onboarding
+    if (!officer.approved) {
+      return res.status(200).json(
+        { message: "Officer not approved yet",
+          token,
+          officer:{
+            approved: false
+          }
+         }
+      );
+    }
+
+    // ✅ Approved officer
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      officer: {
+        approved: true
+      },
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 
 // Officer profile
 export const getOfficerProfile = async (req, res) => {

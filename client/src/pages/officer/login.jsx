@@ -14,36 +14,74 @@ function Officerslogin() {
 
   const isDisabled = password.length < 6 || loading;
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError('');
+  //   setSuccess('');
+  //   setLoading(true);
+
+  //   try {
+  //     const res = await fetch(`${BASE_URL}officers/me`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (res.ok) {
+  //       localStorage.setItem("token", data.token);
+  //       setSuccess('Login successful!');
+  //       setTimeout(() => {
+  //         navigate('/officer/dashboard'); 
+  //       }, 1000);
+  //     } else {
+  //       setError(data.error);
+  //     }
+  //   } catch {
+  //     setError('Server error. Try again later.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      const res = await fetch(`${BASE_URL}officerLogin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch(`${BASE_URL}officers/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        setSuccess('Login successful!');
-        setTimeout(() => {
-          navigate('/officer/dashboard'); 
-        }, 1000);
-      } else {
-        setError(data.error);
-      }
-    } catch {
-      setError('Server error. Try again later.');
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      setError(data.message || "Login failed");
+      return;
     }
-  };
+
+    // Redirect logic
+    if (!data.officer.approved) {
+      navigate("/officer/onboarding");
+    } else {
+      // Save token
+      localStorage.setItem("token", data.token);
+      navigate("/officer/dashboard");
+    }
+
+  } catch (err) {
+    setError("Server error. Try again later.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">

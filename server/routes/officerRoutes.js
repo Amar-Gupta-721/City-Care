@@ -6,17 +6,32 @@ import {
   listOfficerRequests,
   approveOfficer,
   denyOfficer,
-  solveComplaint
+  solveComplaint,
+  officerLogin
 } from "../controllers/officerController.js";
 import { protect, authorizeRoles } from "../middleware/authMiddleware.js";
+
+import multer from "multer";
+const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
 // Officer create own account
 router.post("/register", registerOfficer);
 
+// Officer login
+router.post("/login", officerLogin);
+
 // Officer onboarding (after signup)
-router.post("/onboarding", protect, officerOnboarding);
+// router.post("/onboarding", protect, authorizeRoles("officer"), officerOnboarding);
+router.post(
+  "/onboarding",
+  protect,
+  authorizeRoles("officer"),
+  upload.single("idImage"),   // <<< THIS IS REQUIRED
+  officerOnboarding
+);
+
 
 // Officer dashboard & profile
 router.get("/me", protect, getOfficerProfile);

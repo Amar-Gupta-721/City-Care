@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const OfficerOnboarding = () => {
+  const navigate = useNavigate();
+
+  const BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
     // department: "",
     departmentId: "",
     phone: "",
     sector: "",
   });
 
-  // const [idImage, setIdImage] = useState(null);
-  // const [previewUrl, setPreviewUrl] = useState(null);
-  // const token = localStorage.getItem("token");
-
-
   const [departments, setDepartments] = useState([]);
   const [idImage, setIdImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const token = localStorage.getItem("token");
-
-   useEffect(() => {
-    // ✅ Load department list from backend
+  useEffect(() => {
     const fetchDepartments = async () => {
       const res = await fetch(`${BASE_URL}departments/`);
       const data = await res.json();
       setDepartments(data.departments || []);
     };
     fetchDepartments();
-  }, []);
+    //  }, []);
+  }, [BASE_URL]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,12 +41,10 @@ const OfficerOnboarding = () => {
     const file = e.target.files[0];
     if (file) {
       setIdImage(file);
-      // Create object URL for preview
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  // Cleanup the object URL when component unmounts or previewUrl changes
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -56,20 +53,21 @@ const OfficerOnboarding = () => {
     };
   }, [previewUrl]);
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem("token");
+    console.log("onboarding token in frontend is : ", token);
+
+    if (!token) {
+      alert("Session expired. Please login again.");
+      navigate("/officer/login");
+      return;
+    }
+
     const form = new FormData();
-    // form.append("username", formData.username);
-    // form.append("department", formData.department);
-    // form.append("phone", formData.phone);
-    // form.append("sector", formData.sector);
-    // if (idImage) form.append("id_image", idImage);
 
     form.append("name", formData.name);
-    // form.append("department", formData.departmentId);
     form.append("departmentId", formData.departmentId);
     form.append("phone", formData.phone);
     form.append("sector", formData.sector);
@@ -84,33 +82,27 @@ const OfficerOnboarding = () => {
         body: form,
       });
 
-      // const data = await res.json();
+      const data = await res.json();
 
-      let data;
-try {
-  data = await res.json();
-  console.log("Response Data:", data);
-} catch (e) {
-  console.error("Failed to parse JSON:", e);
-}
+      // 🔥 Fix: Detect already submitted request
+      // if (data.message === "Request already submitted!") {
+      //   alert("You have already submitted your onboarding request.");
+      //   window.location.href = "/officer/dashboard";
+      //   return;
+      // }
 
+      // if (!res.ok) throw new Error(data.error || "Submission failed");
+      if (!res.ok) {
+        throw new Error(data.message || "Submission failed");
+      }
 
-      if (!res.ok) throw new Error(data.message  || "Submission failed");
+      // alert("Officer onboarded successfully!");
+      alert(data.message);
 
-      alert("Officer onboarded successfully!");
+      // localStorage.setItem("officerId", data.officerId);
 
-      // setFormData({
-      //   username: "",
-      //   department: "",
-      //   phone: "",
-      //   sector: "",
-      // });
-      // setIdImage(null);
-      // setPreviewUrl(null);
-
-      // localStorage.setItem("officerId", data.user_id);
-      localStorage.setItem("officerId", data.officerId);
-      window.location.href = "/officer/dashboard";
+      // window.location.href = "/officer/dashboard";
+      navigate("/officer/dashboard");
     } catch (error) {
       console.error("Error:", error.message);
       alert("Error submitting data: " + error.message);
@@ -124,15 +116,15 @@ try {
           Officer Onboarding
         </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
-          {["username", "department", "phone", "sector"].map((field) => (
+          {["name", "departmentId", "phone", "sector"].map((field) => (
             <div key={field}>
               <label className="block text-sm font-semibold text-text mb-1 capitalize">
                 {field === "phone" ? "Phone Number" : field}
               </label>
-              {field === "department" ? (
+              {field === "departmentId" ? (
                 <select
-                  name="department"
-                  value={formData.department}
+                  name="departmentId"
+                  value={formData.departmentId}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-secondary rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                   required
@@ -162,7 +154,7 @@ try {
             </label>
             <input
               type="file"
-              name="id_image"
+              name="idImage"
               accept="image/*"
               onChange={handleImageChange}
               className="w-full px-3 py-2 bg-white border border-secondary rounded-md"
