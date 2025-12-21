@@ -76,7 +76,7 @@ const OfficerDashboard = () => {
     setError("");
 
     try {
-      const res = await fetch(`${BASE_URL}officer/solve/${complaintId}`, {
+      const res = await fetch(`${BASE_URL}officers/solve/${complaintId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

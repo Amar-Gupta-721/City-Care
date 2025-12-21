@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Officer from "../models/Officer.js";
 import User from "../models/User.js";
+import Complaint from "../models/Complaint.js";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
@@ -205,13 +206,18 @@ export const denyOfficer = async (req, res) => {
 
 export const solveComplaint = async (req, res) => {
   try {
-    let complaint = await Complaint.findById(req.params.id);
+    const complaint = await Complaint.findById(req.params.id);
     if (!complaint) return res.status(404).json({ error: "Complaint not found" });
 
-    complaint.status = "Solved";
+    complaint.Status = "Resolved"; // ✅ match schema enum
     await complaint.save();
 
-    res.json({ success: true, message: "Complaint solved" });
+    // res.json({ success: true, message: "Complaint solved" });
+     res.json({
+      success: true,
+      message: "Complaint marked as resolved",
+      complaint,
+    });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

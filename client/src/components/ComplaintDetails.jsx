@@ -131,14 +131,14 @@ const ComplaintDetail = ({ complaint, onClose, onSolve, loading = false }) => {
   if (!complaint) return null;
 
   const mediaFiles = complaint.Media || [];
-  const isSolved = complaint.Status === "Solved";
+  const isSolved = complaint.Status === "Resolved";
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 // remove `/api` for static files
 const SERVER_BASE = API_BASE.replace("/api/", "/");
 
   const handleSolveClick = () => {
     if (loading) return;
-    onSolve(complaint.ID);
+    onSolve(complaint._id);
   };
 
   const lat = Number(complaint.Latitude);

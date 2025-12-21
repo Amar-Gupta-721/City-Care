@@ -1,7 +1,7 @@
 import { BadgeCheck, Clock } from 'lucide-react';
 
 const ComplaintCard = ({ complaint, onClick }) => {
-  const isResolved = complaint.Status === 'Solved';
+  const isResolved = complaint.Status === 'Resolved';
 
   const statusStyles = isResolved
     ? 'bg-green-100 ring-green-200'
