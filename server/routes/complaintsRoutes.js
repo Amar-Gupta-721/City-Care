@@ -12,6 +12,12 @@ router.get('/my', protect, getMyComplaints);
 router.put('/:id', protect, authorizeRoles('admin', 'officer'), updateComplaintStatus);
 
 
-router.get("/department/:officerId", protect, getComplaintsByOfficerDepartment);
+// router.get("/department/:officerId", protect, getComplaintsByOfficerDepartment);
+router.get(
+  "/department/:officerId",
+  protect,
+  authorizeRoles("officer"),
+  getComplaintsByOfficerDepartment
+);
 
 export default router;

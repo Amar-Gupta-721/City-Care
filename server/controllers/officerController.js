@@ -47,8 +47,8 @@ export const registerOfficer = async (req, res) => {
 
 export const officerOnboarding = async (req, res) => {
   try {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+    // console.log("BODY:", req.body);
+    // console.log("FILE:", req.file);
 
     const { name, phone, departmentId, sector } = req.body;
 
@@ -144,13 +144,36 @@ export const officerLogin = async (req, res) => {
 
 
 // Officer profile
-export const getOfficerProfile = async (req, res) => {
-  const officer = await Officer.findOne({ user: req.user._id })
-    .populate("department", "name")
-    .populate("user", "name email role");
+// export const getOfficerProfile = async (req, res) => {
+//   const officer = await Officer.findOne({ user: req.user._id })
+//     .populate("department", "name")
+//     .populate("user", "name email role");
 
-  res.json({ officer });
+//   res.json({ officer });
+// };
+export const getOfficerProfile = async (req, res) => {
+  try {
+    const officer = await Officer.findOne({ user: req.user._id })
+      .populate("user", "name email role");
+
+    if (!officer) {
+      return res.status(404).json({ error: "Officer not found" });
+    }
+
+    res.status(200).json({
+      id: officer._id,
+      name: officer.user.name,
+      email: officer.user.email,
+      role: officer.user.role,
+      department: officer.department,
+      approved: officer.approved,
+    });
+  } catch (error) {
+    console.error("Get officer profile error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
 };
+
 
 export const listOfficerRequests = async (req, res) => {
   const requests = await Officer.find()

@@ -1,5 +1,6 @@
 // server/controllers/complaintController.js
 import Complaint from '../models/Complaint.js';
+import Officer from '../models/Officer.js';
 import cloudinary from '../utils/cloudinary.js';
 import fs from 'fs';
 import crypto from "crypto";
@@ -98,14 +99,45 @@ export const createComplaint = async (req, res) => {
   }
 };
 
+// export const getComplaintsByOfficerDepartment = async (req, res) => {
+//   try {
+//     const officer = await Officer.findById(req.params.officerId).populate("department");
+//     if (!officer) return res.status(404).json({ error: "Officer not found" });
+
+//     const complaints = await Complaint.find({ department: officer.department._id });
+//     res.json(complaints);
+//   } catch (error) {
+//     res.status(500).json({ error: "Server error" });
+//   }
+// };
+
 export const getComplaintsByOfficerDepartment = async (req, res) => {
   try {
-    const officer = await Officer.findById(req.params.officerId).populate("department");
-    if (!officer) return res.status(404).json({ error: "Officer not found" });
+    const { officerId } = req.params;
 
-    const complaints = await Complaint.find({ department: officer.department._id });
-    res.json(complaints);
+    // 1. Find officer
+    const officer = await Officer.findById(officerId);
+    if (!officer) {
+      return res.status(404).json({ error: "Officer not found" });
+    }
+
+    if (!officer.department) {
+      return res.status(400).json({ error: "Officer department not assigned" });
+    }
+
+    // 2. Find complaints of same department
+    // const complaints = await Complaint.find({
+    //   Department: officer.department,
+    // }).sort({ createdAt: -1 });
+
+     // ✅ CASE-INSENSITIVE department match
+    const complaints = await Complaint.find({
+      Department: { $regex: `^${officer.department}$`, $options: "i" },
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(complaints);
   } catch (error) {
+    console.error("Error fetching department complaints:", error);
     res.status(500).json({ error: "Server error" });
   }
 };

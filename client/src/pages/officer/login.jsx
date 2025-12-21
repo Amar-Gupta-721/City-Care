@@ -60,18 +60,22 @@ function Officerslogin() {
     });
 
     const data = await res.json();
+    console.log("login page data from backend is : ", data);
 
     if (!res.ok) {
       setError(data.message || "Login failed");
       return;
     }
 
+    // 🔥 SAVE TOKEN HERE (THIS WAS MISSING / BROKEN)
+    localStorage.setItem("token", data.token);
+
     // Redirect logic
     if (!data.officer.approved) {
       navigate("/officer/onboarding");
     } else {
       // Save token
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("token", data.token);
       navigate("/officer/dashboard");
     }
 
