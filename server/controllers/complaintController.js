@@ -86,6 +86,7 @@ export const createComplaint = async (req, res) => {
       Longitude: req.body.Longitude,
       ComplaintCode: "CMP-" + crypto.randomBytes(4).toString("hex").toUpperCase(),
       Media: req.files?.map(file => ({
+        ImageURL: file.filename,        // ✅ THIS IS THE KEY FIX
         fileName: file.originalname,
         mimeType: file.mimetype,
         size: file.size

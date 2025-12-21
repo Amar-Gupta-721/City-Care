@@ -74,7 +74,12 @@ const complaintSchema = new mongoose.Schema({
   ComplaintCode: { type: String, unique: true },
   Media: [
     {
-      fileName: String,
+      ImageURL: {
+          type: String,
+          required: true, // stores saved filename
+        },
+      // fileName: String,
+      OriginalName: String,
       mimeType: String,
       size: Number,
     },

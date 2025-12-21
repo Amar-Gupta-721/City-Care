@@ -8,7 +8,7 @@ import authRoutes from './routes/authRoutes.js';
 import complaintRoutes from './routes/complaintsRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
 import officerRoutes from './routes/officerRoutes.js';
-
+import path from "path";
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
@@ -24,6 +24,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/officers', officerRoutes);
+// app.use(
+//   "/uploads",
+//   express.static(path.join(process.cwd(), "tmp", "uploads"))
+// );
+app.use("/uploads", express.static("tmp/uploads"))
 
 // health
 app.get('/', (req, res) => res.send('CityCare API running'));
