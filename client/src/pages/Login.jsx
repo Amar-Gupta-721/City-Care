@@ -26,6 +26,7 @@ function Login() {
       const data = await res.json();
       if (res.status === 200) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem("role", data.user.role);
         setSuccess(data.message);
         setEmail('');
         setPassword('');

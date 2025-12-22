@@ -95,6 +95,7 @@ function Dashboard() {
 
   const handleDeleteComplaint = async (id) => {
     const token = localStorage.getItem('token');
+
     try {
       const res = await fetch(`${BASE_URL}complaints/${id}`, {
         method: 'DELETE',
@@ -102,6 +103,7 @@ function Dashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
+      
       if (res.ok) {
         fetchComplaints();
       }

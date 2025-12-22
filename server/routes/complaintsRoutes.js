@@ -1,6 +1,6 @@
 // server/routes/complaintRoutes.js
 import express from 'express';
-import { createComplaint, getComplaints, getMyComplaints, updateComplaintStatus, getComplaintsByOfficerDepartment } from '../controllers/complaintController.js';
+import { createComplaint, deleteComplaint, getComplaints, getMyComplaints, updateComplaintStatus, getComplaintsByOfficerDepartment } from '../controllers/complaintController.js';
 import { protect, authorizeRoles } from '../middleware/authMiddleware.js';
 import upload from '../utils/multer.js';
 
@@ -19,5 +19,8 @@ router.get(
   authorizeRoles("officer"),
   getComplaintsByOfficerDepartment
 );
+
+// Delete complaint
+router.delete("/:id", protect, deleteComplaint);
 
 export default router;

@@ -3,76 +3,8 @@ import Complaint from '../models/Complaint.js';
 import Officer from '../models/Officer.js';
 import cloudinary from '../utils/cloudinary.js';
 import fs from 'fs';
+import path from "path";
 import crypto from "crypto";
-
-// export const createComplaint = async (req, res) => {
-//   try {
-//     const { title, description, departmentId, longitude, latitude } = req.body;
-//     const reporter = req.user._id;
-
-//     const complaint = new Complaint({
-//       title,
-//       description,
-//       reporter,
-//       department: departmentId || undefined
-//     });
-
-//     if (longitude && latitude) {
-//       complaint.location = { type: 'Point', coordinates: [parseFloat(longitude), parseFloat(latitude)] };
-//     }
-
-//     const uploaded = [];
-//     if (req.files && req.files.length) {
-//       for (const file of req.files) {
-//         const result = await cloudinary.uploader.upload(file.path, { folder: 'citycare/complaints' });
-//         uploaded.push({ url: result.secure_url, public_id: result.public_id });
-//         // remove temp file
-//         try { fs.unlinkSync(file.path); } catch (e) { /* ignore */ }
-//       }
-//       complaint.images = uploaded;
-//     }
-
-//     await complaint.save();
-//     const populated = await complaint.populate('reporter', 'name email').populate('department', 'name');
-//     res.status(201).json(populated);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
-// export const createComplaint = async (req, res) => {
-//   try {
-//     const { Title, Department, Description, Latitude, Longitude } = req.body;
-//     const mediaFiles = req.files || [];
-
-//     const newComplaint = new Complaint({
-//       User_id: req.user.id,           // from JWT
-//       Title,
-//       Department,
-//       Description,
-//       Latitude,
-//       Longitude,
-//       Media: mediaFiles.map(file => ({
-//         fileName: file.originalname,
-//         mimeType: file.mimetype,
-//         size: file.size,
-//       })),
-//     });
-
-//     await newComplaint.save();
-
-//     console.log("BODY:", req.body);
-//     console.log("FILES:", req.files);
-
-
-//     return res.status(201).json({ message: "Complaint submitted successfully!" });
-//   } catch (err) {
-//     console.error("🛑 Error saving complaint:", err);
-//     return res.status(500).json({ error: "Server error while saving complaint" });
-//   }
-// };
-
 
 
 export const createComplaint = async (req, res) => {
@@ -183,5 +115,45 @@ export const updateComplaintStatus = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deleteComplaint = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const complaint = await Complaint.findById(id);
+
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+
+    // 🗑️ Delete media files from server
+    if (complaint.Media && complaint.Media.length > 0) {
+      complaint.Media.forEach((media) => {
+        if (media.ImageURL) {
+          const filePath = path.join(
+            process.cwd(),
+            "tmp",
+            "uploads",
+            media.ImageURL
+          );
+
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        }
+      });
+    }
+
+    await complaint.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Complaint deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete complaint error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

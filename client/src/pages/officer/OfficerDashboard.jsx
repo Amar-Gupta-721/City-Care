@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import OfficerHeader from "../../components/OfficerHeader";
 import ComplaintList from "../../components/ComplaintList";
 import ComplaintDetail from "../../components/ComplaintDetails";
+import { useNavigate } from "react-router-dom";
 
 const OfficerDashboard = () => {
   const [officer, setOfficer] = useState({ id: "", name: "", department: "" });
@@ -9,6 +10,7 @@ const OfficerDashboard = () => {
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
@@ -35,6 +37,7 @@ const OfficerDashboard = () => {
   const fetchOfficerProfile = async () => {
     if (!token) {
       setError("Missing auth token");
+      navigate("/");
       return;
     }
 

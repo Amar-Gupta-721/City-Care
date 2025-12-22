@@ -69,6 +69,7 @@ function Officerslogin() {
 
     // 🔥 SAVE TOKEN HERE (THIS WAS MISSING / BROKEN)
     localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.user.role);
 
     // Redirect logic
     if (!data.officer.approved) {
