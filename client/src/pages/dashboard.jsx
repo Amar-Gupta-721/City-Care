@@ -31,9 +31,9 @@ function Dashboard() {
   const countStatus = (complaintsList) => {
     const counts = { Total: 0, inProgress: 0, resolved: 0 };
     complaintsList.forEach((c) => {
-      if (c.Status === 'pending' || c.Status === 'Solved') counts.Total++;
-      if (c.Status === 'pending') counts.inProgress++;
-      if (c.Status === 'Solved') counts.resolved++;
+      if (c.Status === 'Pending' || c.Status === 'Resolved') counts.Total++;
+      if (c.Status === 'Pending') counts.inProgress++;
+      if (c.Status === 'Resolved') counts.resolved++;
     });
     setStatusCount(counts);
   };
@@ -118,7 +118,7 @@ function Dashboard() {
 
     try {
       // const res = await fetch(`${BASE_URL}dashboard`, {
-      const res = await fetch(`${BASE_URL}complaints/my`, {
+      const res = await fetch(`${BASE_URL}auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -126,11 +126,13 @@ function Dashboard() {
       if (res.ok) {
         const data = await res.json();
 
-        setComplaints(data.complaints);
-        countStatus(data.complaints);
+        console.log("data of complaints is : ", data);
+
+        // setComplaints(data.complaints);
+        // countStatus(data.complaints);
 
         setName(data.Name);
-        setMessage(data.Message);
+        // setMessage(data.Message);
         setUserId(data.User_id);
         setRole(data.Role);
         setVerified(data.verified);

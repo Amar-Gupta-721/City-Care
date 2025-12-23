@@ -150,3 +150,20 @@ export const verifyEmail = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+export const getMe = async (req, res) => {
+  try {
+    const user = req.user; // coming from protect middleware
+
+    res.status(200).json({
+      User_id: user._id,
+      Name: user.name,
+      Email: user.email,
+      Role: user.role,
+      verified: user.verified,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

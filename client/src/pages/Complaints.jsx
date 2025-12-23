@@ -373,7 +373,7 @@ function Complaints() {
                   !title ||
                   !department ||
                   !description ||
-                  description.length < 20
+                  description.length < 10
                 }
                 className="px-8 py-4 bg-primary text-white font-bold text-lg rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
               >
@@ -394,7 +394,7 @@ function Complaints() {
               {(!title ||
                 !department ||
                 !description ||
-                description.length < 20) && (
+                description.length < 10) && (
                 <p className="text-amber-600 mt-1">
                   Please fill all required fields to submit
                 </p>
