@@ -43,16 +43,18 @@ function Login() {
     setError('');
     setSuccess('');
     try {
-      const id_token = response.credential;
+      const idToken = response.credential;
+
       const res = await fetch(`${BASE_URL}auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: id_token }),
+        body: JSON.stringify({ idToken }), // ✅ FIXED
       });
 
       const data = await res.json();
       if (res.status === 200) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.user.role); // good practice
         setSuccess('Logged in successfully with Google!');
         setTimeout(() => navigate('/dashboard'), 1500);
       } else {
@@ -72,7 +74,8 @@ function Login() {
 
     script.onload = () => {
       window.google.accounts.id.initialize({
-        client_id: "802392548098-rojudnh96bvrgm42fpp05k2jm8ugrl90.apps.googleusercontent.com",
+        // client_id: "802392548098-rojudnh96bvrgm42fpp05k2jm8ugrl90.apps.googleusercontent.com",
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleGoogleCallback,
       });
 

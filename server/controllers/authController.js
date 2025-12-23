@@ -115,8 +115,10 @@ export const googleSignIn = async (req, res) => {
 
     let user = await User.findOne({ email });
     if (!user) {
+      console.log("new user is created .");
       user = await User.create({ name, email, googleId, avatar: picture, isVerified: true });
     } else if (!user.googleId) {
+      console.log("user is updated by google login");
       user.googleId = googleId;
       user.isVerified = true;
       await user.save();
@@ -160,7 +162,7 @@ export const getMe = async (req, res) => {
       Name: user.name,
       Email: user.email,
       Role: user.role,
-      verified: user.verified,
+      verified: user.isVerified,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
