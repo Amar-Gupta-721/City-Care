@@ -4,7 +4,9 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import User from '../models/User.js';
-import { sendEmail } from '../utils/mailer.js';
+// import { sendEmail } from '../utils/sendEmail.js';
+import crypto from "crypto";
+import sendEmail from "../utils/sendEmail.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -169,3 +171,64 @@ export const getMe = async (req, res) => {
   }
 };
 
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  console.log("forgot password user is : ", user);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Generate token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Hash token
+  user.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 min
+
+  await user.save();
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  const message = `
+    You requested a password reset.
+    Click here to reset your password:
+    ${resetUrl}
+    If you didn't request this, ignore this email.
+  `;
+
+  await sendEmail(user.email, "Password Reset - CityCare", message);
+
+  res.json({ message: "Password reset link sent to email" });
+};
+
+
+export const resetPassword = async (req, res) => {
+  const resetToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: resetToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  res.json({ message: "Password updated successfully" });
+};

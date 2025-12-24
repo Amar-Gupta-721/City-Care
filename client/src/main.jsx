@@ -16,12 +16,19 @@ import {GoogleOAuthProvider} from '@react-oauth/google'
 import OfficerOnboarding from './pages/officer/onboarding.jsx'
 import AdminLogin from './pages/officer/adminLogin.jsx'
 
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
+
 
 const router = createBrowserRouter([
   {path: '/', element: <App />},
   {path: '/login', element: <Login />},
   {path: '*', element: <NotFound />},
   {path: '/register', element: <Register />},
+
+  { path: '/forgot-password', element: <ForgotPassword /> },   // ✅
+  { path: '/reset-password/:token', element: <ResetPassword /> }, // ✅
+
   {path: '/dashboard', element: <Dashboard />},
   {path: '/complaint', element:<ComplaintForm />},
   {path: 'officer/login', element: <Officerslogin />},

@@ -23,7 +23,10 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ['citizen', 'officer', 'admin'], default: 'citizen' },
   avatar: { type: String },
   isVerified: { type: Boolean, default: false }, // email verification
-  verificationToken: { type: String } // optional: store token to validate
+  verificationToken: { type: String }, // optional: store token to validate
+  
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 }, { timestamps: true });
 
 export default mongoose.model('User', UserSchema);
