@@ -12,7 +12,6 @@ router.get('/my', protect, getMyComplaints);
 router.put('/:id', protect, authorizeRoles('admin', 'officer'), updateComplaintStatus);
 
 
-// router.get("/department/:officerId", protect, getComplaintsByOfficerDepartment);
 router.get(
   "/department/:officerId",
   protect,
@@ -20,7 +19,6 @@ router.get(
   getComplaintsByOfficerDepartment
 );
 
-// Delete complaint
 router.delete("/:id", protect, deleteComplaint);
 
 export default router;

@@ -24,14 +24,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/officers', officerRoutes);
-// app.use(
-//   "/uploads",
-//   express.static(path.join(process.cwd(), "tmp", "uploads"))
-// );
 app.use("/uploads", express.static("tmp/uploads"))
 
 // health
-app.get('/', (req, res) => res.send('CityCare API running'));
+// app.get('/', (req, res) => res.send('CityCare API running'));
 
 // error handlers
 app.use(notFound);

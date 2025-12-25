@@ -10,8 +10,6 @@ router.post('/register', localRegister);
 router.post('/login', localLogin);
 router.get('/verify', verifyEmail);
 
-// convenience endpoints
-// router.get('/me', protect, (req, res) => res.json({ user: req.user }));
 router.get("/me", protect, getMe);
 
 router.post("/forgot-password", forgotPassword);

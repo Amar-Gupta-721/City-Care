@@ -23,7 +23,6 @@ router.post("/register", registerOfficer);
 router.post("/login", officerLogin);
 
 // Officer onboarding (after signup)
-// router.post("/onboarding", protect, authorizeRoles("officer"), officerOnboarding);
 router.post(
   "/onboarding",
   protect,

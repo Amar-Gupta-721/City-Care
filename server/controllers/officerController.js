@@ -27,8 +27,6 @@ export const registerOfficer = async (req, res) => {
 
     await Officer.create({
       user: user._id,
-      // phone,
-      // department: departmentId,
       approved: false
     });
 
@@ -48,8 +46,6 @@ export const registerOfficer = async (req, res) => {
 
 export const officerOnboarding = async (req, res) => {
   try {
-    // console.log("BODY:", req.body);
-    // console.log("FILE:", req.file);
 
     const { name, phone, departmentId, sector } = req.body;
 
@@ -143,15 +139,6 @@ export const officerLogin = async (req, res) => {
   }
 };
 
-
-// Officer profile
-// export const getOfficerProfile = async (req, res) => {
-//   const officer = await Officer.findOne({ user: req.user._id })
-//     .populate("department", "name")
-//     .populate("user", "name email role");
-
-//   res.json({ officer });
-// };
 export const getOfficerProfile = async (req, res) => {
   try {
     const officer = await Officer.findOne({ user: req.user._id })
@@ -212,7 +199,6 @@ export const solveComplaint = async (req, res) => {
     complaint.Status = "Resolved"; // ✅ match schema enum
     await complaint.save();
 
-    // res.json({ success: true, message: "Complaint solved" });
      res.json({
       success: true,
       message: "Complaint marked as resolved",
