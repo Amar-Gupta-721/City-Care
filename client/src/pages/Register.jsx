@@ -30,25 +30,9 @@ function Register() {
     });
 
     const data = await res.json();
-    // console.log("data in frontend is : ", res) ;
     console.log("Backend response JSON: ", data, "status:", res.status);
 
     const emailFail = data.error && data.error.toLowerCase().includes('failed to send email');
-
-    // if (res.status === 200 || emailFail) {
-    //   localStorage.setItem('token', data.token);
-    //   if (emailFail) {
-    //     setsuccess('Registered successfully, but verification email failed to send.');  
-    //   } else {
-    //     setsuccess(data.message);
-    //   }
-    //   setname('');
-    //   setemail('');
-    //   setpassword('');
-    //   setTimeout(() => navigate('/dashboard'), 1500);
-    // } else {
-    //   seterror(data.error || 'Registration failed');
-    // }
 
     if (res.ok || emailFail) {
   localStorage.setItem('token', data.token);

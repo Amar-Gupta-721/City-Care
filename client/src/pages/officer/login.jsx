@@ -75,8 +75,6 @@ function Officerslogin() {
     if (!data.officer.approved) {
       navigate("/officer/onboarding");
     } else {
-      // Save token
-      // localStorage.setItem("token", data.token);
       navigate("/officer/dashboard");
     }
 

@@ -9,7 +9,6 @@ const OfficerOnboarding = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    // department: "",
     departmentId: "",
     phone: "",
     sector: "",
@@ -84,24 +83,11 @@ const OfficerOnboarding = () => {
 
       const data = await res.json();
 
-      // 🔥 Fix: Detect already submitted request
-      // if (data.message === "Request already submitted!") {
-      //   alert("You have already submitted your onboarding request.");
-      //   window.location.href = "/officer/dashboard";
-      //   return;
-      // }
-
-      // if (!res.ok) throw new Error(data.error || "Submission failed");
       if (!res.ok) {
         throw new Error(data.message || "Submission failed");
       }
 
-      // alert("Officer onboarded successfully!");
       alert(data.message);
-
-      // localStorage.setItem("officerId", data.officerId);
-
-      // window.location.href = "/officer/dashboard";
       navigate("/officer/dashboard");
     } catch (error) {
       console.error("Error:", error.message);

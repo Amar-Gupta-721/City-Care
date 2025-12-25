@@ -6,24 +6,8 @@ import { Link } from 'react-router-dom'
 
 function Hero() {
 
-  const  BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/';
-
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    const wake = async () => {
-      try {
-        const res = await fetch(`${BASE_URL}health`, {
-          method: 'GET',
-        })
-        const text = await res.text()
-        console.log('Health endpoint response:', text)
-      } catch (err) {
-        console.error('Error fetching health endpoint:', err)
-      }
-    }
-    wake()
-  }, [BASE_URL])
   return (
     <div>
       <div className="flex flex-col justify-center items-center bg-background text-center px-6 pt-44 pb-12">

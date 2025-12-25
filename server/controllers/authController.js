@@ -4,56 +4,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import User from '../models/User.js';
-// import { sendEmail } from '../utils/sendEmail.js';
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const generateToken = (user) => jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
-
-// Local registration
-// export const localRegister = async (req, res) => {
-//   console.log("BODY RECEIVED AT /register:", req.body);
-//   try {
-//     const { name, email, password, role } = req.body;
-//     if (!email || !password) return res.status(400).json({ message: 'Email & password required' });
-
-//     const existing = await User.findOne({ email });
-//     if (existing) return res.status(400).json({ message: 'User already exists' });
-
-//     const salt = await bcrypt.genSalt(10);
-//     const hashed = await bcrypt.hash(password, salt);
-
-//     const verificationToken = uuidv4();
-
-//     const user = await User.create({
-//       name,
-//       email,
-//       password: hashed,
-//       role: role || 'citizen',
-//       verificationToken,
-//       isVerified: false
-//     });
-
-//     // send verification email
-//     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}&email=${encodeURIComponent(email)}`;
-//     const html = `<p>Hello ${name || email},</p>
-//       <p>Click to verify your email: <a href="${verifyUrl}" target="_blank">${verifyUrl}</a></p>`;
-
-//     try {
-//       await sendEmail({ to: email, subject: 'Verify your CityCare email', html });
-//     } catch (mailerErr) {
-//       console.error('Mailer error:', mailerErr);
-//     }
-
-//     const token = generateToken(user);
-//     res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Server Error' });
-//   }
-// };
 
 export const localRegister = async (req, res) => {
   console.log("user data is : ", req.body);
@@ -92,10 +48,11 @@ export const localLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    console.log("user on login is : ", user);
+    if (!user) return res.status(400).json({ message: 'Invalid email or password' });
 
     const valid = user.password ? await bcrypt.compare(password, user.password) : false;
-    if (!valid) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!valid) return res.status(400).json({ message: 'Invalid email or password' });
 
     const token = generateToken(user);
     res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });

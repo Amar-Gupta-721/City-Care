@@ -25,6 +25,7 @@ function Login() {
       });
 
       const data = await res.json();
+      console.log("login data is : ", data);
       if (res.status === 200) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.user.role);
@@ -33,7 +34,7 @@ function Login() {
         setPassword("");
         setTimeout(() => navigate("/dashboard"), 2000);
       } else {
-        setError(data.error || "Login failed");
+        setError(data.message || "Login failed");
       }
     } catch {
       setError("Login failed. Please try again.");
@@ -75,7 +76,6 @@ function Login() {
 
     script.onload = () => {
       window.google.accounts.id.initialize({
-        // client_id: "802392548098-rojudnh96bvrgm42fpp05k2jm8ugrl90.apps.googleusercontent.com",
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleGoogleCallback,
       });

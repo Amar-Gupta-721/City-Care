@@ -38,34 +38,6 @@ function Dashboard() {
     setStatusCount(counts);
   };
 
-  // const fetchComplaints = async () => {
-  //   const token = localStorage.getItem('token');
-  //   try {
-  //     const res = await fetch(`${BASE_URL}complaints/my`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     // if (res.ok) {
-  //     //   const data = await res.json();
-  //     //   console.log(data);
-  //     //   setComplaints(data);
-  //     //   countStatus(data);
-  //     // }
-  //     if (res.ok) {
-  //       const data = await res.json();
-  //       console.log(data);
-  //       setComplaints(data.complaints);
-  //       countStatus(data.complaints);
-  //     } else {
-  //       const err = await res.json();
-  //       setError(err.error);
-  //     }
-  //   } catch (err) {
-  //     setError(err.message);
-  //   }
-  // };
-
   const fetchComplaints = async () => {
   const token = localStorage.getItem('token');
   try {
@@ -117,7 +89,6 @@ function Dashboard() {
     if (!token) return navigate('/login');
 
     try {
-      // const res = await fetch(`${BASE_URL}dashboard`, {
       const res = await fetch(`${BASE_URL}auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -127,9 +98,6 @@ function Dashboard() {
         const data = await res.json();
 
         console.log("data of complaints is : ", data);
-
-        // setComplaints(data.complaints);
-        // countStatus(data.complaints);
 
         setName(data.Name);
         // setMessage(data.Message);

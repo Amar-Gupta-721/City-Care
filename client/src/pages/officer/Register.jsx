@@ -22,11 +22,6 @@ function OfficerRegister() {
     setLoading(true);
 
     try {
-      // const res = await fetch(`${BASE_URL}officerRegister`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password, role : "officer" }),
-      // });
 
       const res = await fetch(`${BASE_URL}officers/register`, {
         method: 'POST',
@@ -34,7 +29,6 @@ function OfficerRegister() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-        // body: JSON.stringify({ phone, departmentId }),
         body: JSON.stringify({ email, password, role: "officer" }),
       });
 
@@ -46,7 +40,6 @@ function OfficerRegister() {
         localStorage.setItem("token", data.token);
         console.log
         setTimeout(() => {
-          // navigate('/officers/onboarding');
           navigate('/officer/onboarding');
         }, 1000);
       } else {

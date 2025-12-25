@@ -32,18 +32,6 @@ export const createComplaint = async (req, res) => {
   }
 };
 
-// export const getComplaintsByOfficerDepartment = async (req, res) => {
-//   try {
-//     const officer = await Officer.findById(req.params.officerId).populate("department");
-//     if (!officer) return res.status(404).json({ error: "Officer not found" });
-
-//     const complaints = await Complaint.find({ department: officer.department._id });
-//     res.json(complaints);
-//   } catch (error) {
-//     res.status(500).json({ error: "Server error" });
-//   }
-// };
-
 export const getComplaintsByOfficerDepartment = async (req, res) => {
   try {
     const { officerId } = req.params;
@@ -57,11 +45,6 @@ export const getComplaintsByOfficerDepartment = async (req, res) => {
     if (!officer.department) {
       return res.status(400).json({ error: "Officer department not assigned" });
     }
-
-    // 2. Find complaints of same department
-    // const complaints = await Complaint.find({
-    //   Department: officer.department,
-    // }).sort({ createdAt: -1 });
 
      // ✅ CASE-INSENSITIVE department match
     const complaints = await Complaint.find({

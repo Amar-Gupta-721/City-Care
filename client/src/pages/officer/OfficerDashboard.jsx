@@ -42,7 +42,6 @@ const OfficerDashboard = () => {
     }
 
     try {
-      // const res = await fetch(`${BASE_URL}officer/profile`, {
       const res = await fetch(`${BASE_URL}officers/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -90,17 +89,6 @@ const OfficerDashboard = () => {
       const data = await res.json();
 
       if (res.ok) {
-        // setComplaints(prevComplaints =>
-        //   prevComplaints.map(complaint =>
-        //     complaint.ID === complaintId
-        //       ? { ...complaint, Status: 'Solved' }
-        //       : complaint
-        //   )
-        // );
-
-        // if (selectedComplaint && selectedComplaint.ID === complaintId) {
-        //   setSelectedComplaint(prev => ({ ...prev, Status: 'Solved' }));
-        // }
 
         setComplaints((prevComplaints) =>
           prevComplaints.map((complaint) =>
