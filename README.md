@@ -155,7 +155,7 @@ npm run dev
 
 ## 🌐 Live Demo
 ```txt
-- https://city-care-teal.vercel.app
+https://city-care-teal.vercel.app
 ````
 
 ---
