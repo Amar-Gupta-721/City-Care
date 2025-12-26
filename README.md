@@ -71,6 +71,7 @@ The platform focuses on **transparency, accountability, and faster resolution of
 
 ## 📂 Project Structure
 
+```txt
 CityCare/
 ├── client/              # Frontend (React + Vite)
 │   ├── src/
