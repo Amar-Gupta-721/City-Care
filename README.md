@@ -30,7 +30,7 @@ The platform focuses on **transparency, accountability, and faster resolution of
 
 ---
 
-### 🛡️ Admin / System Features
+### 🛡️ System Features
 - Role-based authentication (Citizen / Officer)
 - Protected routes using JWT
 - Media handling via Multer
