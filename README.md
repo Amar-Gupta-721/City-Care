@@ -75,9 +75,9 @@ The platform focuses on **transparency, accountability, and faster resolution of
 CityCare/
 ├── client/              # Frontend (React + Vite)
 │   ├── src/
-│         ├── assets/
-│         ├── components/
-│         ├── pages/
+│       ├── assets/
+│       ├── components/
+│       ├── pages/
 │   ├── main.jsx
 │
 ├── server/              # Backend (Node + Express)
@@ -132,23 +132,31 @@ GOOGLE_CLIENT_ID=your_google_client_id
 ## ▶️ Run Locally
 
 ### Clone Repository
+```txt
 git clone https://github.com/your-username/citycare.git  
 cd citycare
+````
 
 ### Backend Setup
+```txt
 cd server  
 npm install  
 npm run dev
+````
 
 ### Frontend Setup
+```txt
 cd client  
 npm install  
 npm run dev
+````
 
 ---
 
 ## 🌐 Live Demo
-- https://city-care-teal.vercel.app  
+```txt
+- https://city-care-teal.vercel.app
+````
 
 ---
 
