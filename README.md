@@ -75,15 +75,18 @@ The platform focuses on **transparency, accountability, and faster resolution of
 CityCare/
 ├── client/              # Frontend (React + Vite)
 │   ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── main.jsx
+│     ├── assets/
+│     ├── components/
+│     ├── pages/
+│   ├── main.jsx
 │
 ├── server/              # Backend (Node + Express)
+│   ├── config/
 │   ├── controllers/
 │   ├── routes/
 │   ├── models/
 │   ├── middleware/
+│   ├── utils/
 │   └── server.js
 │
 └── README.md
