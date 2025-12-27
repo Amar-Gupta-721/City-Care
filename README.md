@@ -54,6 +54,7 @@ The platform focuses on **transparency, accountability, and faster resolution of
 - Express.js
 - REST APIs
 - JWT Authentication
+- Google OAuth 2.0
 - Multer (File uploads)
 - Nodemailer (Email services)
 
@@ -155,7 +156,7 @@ npm run dev
 
 ### 🌐 Live Demo
 ```txt
-https://city-care-teal.vercel.app
+🔗 https://city-care-teal.vercel.app
 ````
 
 ---
