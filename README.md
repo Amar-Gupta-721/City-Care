@@ -175,6 +175,3 @@ npm run dev
 Full-Stack Developer  
 
 ---
-
-## 📄 License
-This project is licensed under the **MIT License**.
