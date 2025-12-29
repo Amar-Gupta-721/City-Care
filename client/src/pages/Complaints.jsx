@@ -53,7 +53,6 @@ function Complaints() {
         });
       },
       (err) => {
-        console.warn('Geolocation error:', err);
         setLocationError(
           'Could not get location. Please allow location access.'
         );
@@ -117,7 +116,6 @@ function Complaints() {
         }
       } catch (err) {
         if (err.name === 'AbortError') return;
-        console.error('Submission error:', err);
         setError('Network error. Please try again.');
       } finally {
         setIsLoading(false);

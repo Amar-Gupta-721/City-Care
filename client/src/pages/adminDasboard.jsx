@@ -30,8 +30,6 @@ function AdminDashboard() {
 
       setOfficerRequests(officerData);
 
-      console.log(complaintsData)
-
       const resolved = complaintsData.filter(c => c.Status === 'Solved').length;
       const pending = complaintsData.length - resolved;
 

@@ -20,8 +20,6 @@ function App() {
     }
   }, [token, role, navigate]);
 
-
-  console.log(import.meta.env.VITE_API_BASE_URL)
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">

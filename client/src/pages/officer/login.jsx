@@ -14,37 +14,6 @@ function Officerslogin() {
 
   const isDisabled = password.length < 6 || loading;
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError('');
-  //   setSuccess('');
-  //   setLoading(true);
-
-  //   try {
-  //     const res = await fetch(`${BASE_URL}officers/me`, {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (res.ok) {
-  //       localStorage.setItem("token", data.token);
-  //       setSuccess('Login successful!');
-  //       setTimeout(() => {
-  //         navigate('/officer/dashboard'); 
-  //       }, 1000);
-  //     } else {
-  //       setError(data.error);
-  //     }
-  //   } catch {
-  //     setError('Server error. Try again later.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
   e.preventDefault();
   setError("");
@@ -60,7 +29,6 @@ function Officerslogin() {
     });
 
     const data = await res.json();
-    console.log("login page data from backend is : ", data);
 
     if (!res.ok) {
       setError(data.message || "Login failed");

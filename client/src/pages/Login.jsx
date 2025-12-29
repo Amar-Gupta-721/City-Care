@@ -25,7 +25,6 @@ function Login() {
       });
 
       const data = await res.json();
-      console.log("login data is : ", data);
       if (res.status === 200) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.user.role);

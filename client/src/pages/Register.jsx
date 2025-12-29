@@ -30,7 +30,6 @@ function Register() {
     });
 
     const data = await res.json();
-    console.log("Backend response JSON: ", data, "status:", res.status);
 
     const emailFail = data.error && data.error.toLowerCase().includes('failed to send email');
 
@@ -51,7 +50,6 @@ function Register() {
 
 
   } catch (err) {
-    console.log(error);
     seterror('Registration failed. Please try again.');
   }
 };

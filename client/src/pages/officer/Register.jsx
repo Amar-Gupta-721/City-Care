@@ -38,7 +38,6 @@ function OfficerRegister() {
       if (res.ok) {
         setSuccess('Registration successful!');
         localStorage.setItem("token", data.token);
-        console.log
         setTimeout(() => {
           navigate('/officer/onboarding');
         }, 1000);

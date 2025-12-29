@@ -49,7 +49,6 @@ function Dashboard() {
 
     if (res.ok) {
       const data = await res.json();
-      console.log(data);
 
       // ✅ FIX
       setComplaints(data.complaints);
@@ -80,7 +79,7 @@ function Dashboard() {
         fetchComplaints();
       }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -96,8 +95,6 @@ function Dashboard() {
       });
       if (res.ok) {
         const data = await res.json();
-
-        console.log("data of complaints is : ", data);
 
         setName(data.Name);
         // setMessage(data.Message);

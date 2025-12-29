@@ -56,7 +56,6 @@ const OfficerOnboarding = () => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
-    console.log("onboarding token in frontend is : ", token);
 
     if (!token) {
       alert("Session expired. Please login again.");
@@ -90,7 +89,6 @@ const OfficerOnboarding = () => {
       alert(data.message);
       navigate("/officer/dashboard");
     } catch (error) {
-      console.error("Error:", error.message);
       alert("Error submitting data: " + error.message);
     }
   };

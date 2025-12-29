@@ -24,12 +24,10 @@ const OfficerDashboard = () => {
       const data = await res.json();
       if (res.ok) {
         setComplaints(data);
-        console.log("Fetched complaints:", data);
       } else {
         setError(data.error || "Failed to fetch complaints");
       }
     } catch (err) {
-      console.error("Error fetching complaints by department:", err);
       setError("An error occurred while fetching complaints.");
     }
   };
@@ -49,8 +47,6 @@ const OfficerDashboard = () => {
       });
       const data = await res.json();
 
-      console.log("Officer profile response:", data);
-
       if (res.ok) {
         setOfficer({
           id: data.id,
@@ -63,7 +59,6 @@ const OfficerDashboard = () => {
         setError(data.error || "Failed to fetch officer profile");
       }
     } catch (err) {
-      console.error("Error fetching officer profile:", err);
       setError("An error occurred while fetching officer profile.");
     }
   };
@@ -102,14 +97,11 @@ const OfficerDashboard = () => {
           setSelectedComplaint((prev) => ({ ...prev, Status: "Resolved" }));
         }
 
-        console.log("Complaint solved successfully:", data);
-
         alert("Complaint marked as solved successfully!");
       } else {
         setError(data.error || "Failed to solve complaint");
       }
     } catch (err) {
-      console.error("Error solving complaint:", err);
       setError("An error occurred while solving the complaint.");
     } finally {
       setLoading(false);
