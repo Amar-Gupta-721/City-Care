@@ -40,89 +40,194 @@ function Complaints() {
       return;
     }
 
-    if (!navigator.geolocation) {
-      setLocationError('Geolocation not supported in your browser.');
-      return;
-    }
+    // if (!navigator.geolocation) {
+    //   setLocationError('Geolocation not supported in your browser.');
+    //   return;
+    // }
 
+    // navigator.geolocation.getCurrentPosition(
+    //   (pos) => {
+    //     setLocation({
+    //       lat: pos.coords.latitude,
+    //       lng: pos.coords.longitude,
+    //     });
+    //   },
+    //   (err) => {
+    //     setLocationError(
+    //       'Could not get location. Please allow location access.'
+    //     );
+    //   },
+    //   { timeout: 10000 }
+    // );
+    const getLocation = () =>
+  new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject('Geolocation not supported');
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLocation({
+        resolve({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         });
       },
-      (err) => {
-        setLocationError(
-          'Could not get location. Please allow location access.'
-        );
-      },
+      () => reject('Permission denied'),
       { timeout: 10000 }
     );
+  });
+
   }, [navigate]);
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      if (!title || !department || !description || description.length < 20 || location.lat === null || location.lng === null) {
-        setError('Please fill all required fields with valid data.');
-        return;
-      }
-      if (location.lat === null || location.lng === null) {
-        setError('Location not available. Please allow location access.');
-        return;
-      }
+//   const handleSubmit = useCallback(
+//     async (e) => {
+//       e.preventDefault();
+//       // if (!title || !department || !description || description.length < 20 || location.lat === null || location.lng === null) {
+//       //   setError('Please fill all required fields with valid data.');
+//       //   return;
+//       // }
+//       // if (location.lat === null || location.lng === null) {
+//       //   setError('Location not available. Please allow location access.');
+//       //   return;
+//       // }
 
-      setIsLoading(true);
-      setError('');
-      setSuccess('');
+//       if (!title || !department || !description) {
+//   setError('All required fields must be filled.');
+//   return;
+// }
 
-      const token = localStorage.getItem('token');
-      const formData = new FormData();
-      formData.append('Title', title);
-      formData.append('Department', department);
-      formData.append('Description', description);
-      formData.append('Latitude', String(location.lat));
-      formData.append('Longitude', String(location.lng));
-      media.forEach((file) => formData.append('media', file));
+// if (description.length < 20) {
+//   setError('Description must be at least 20 characters.');
+//   return;
+// }
 
+// if (!location.lat || !location.lng) {
+//   setError('Location not available. Please allow location access and refresh.');
+//   return;
+// }
+
+
+//       setIsLoading(true);
+//       setError('');
+//       setSuccess('');
+
+//       const token = localStorage.getItem('token');
+//       const formData = new FormData();
+//       formData.append('Title', title);
+//       formData.append('Department', department);
+//       formData.append('Description', description);
+//       formData.append('Latitude', String(location.lat));
+//       formData.append('Longitude', String(location.lng));
+//       media.forEach((file) => formData.append('media', file));
+
+//       try {
+//         const controller = new AbortController();
+//         const response = await fetch(`${BASE_URL}complaints/`, {
+//           method: 'POST',
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: formData,
+//           signal: controller.signal,
+//         });
+
+//         let data = {};
+//         try {
+//           data = await response.json();
+//         } catch {
+//           setError('Failed to parse server response.');
+//           return;
+//         }
+
+//         if (response.ok) {
+//           setSuccess(data.message || 'Complaint submitted successfully.');
+//           resetForm();
+//           setTimeout(() => {
+//             navigate('/dashboard');
+//           }, 1000);
+//         } else {
+//           setError(data.error || 'Failed to submit complaint.');
+//         }
+//       } catch (err) {
+//         if (err.name === 'AbortError') return;
+//         setError('Network error. Please try again.');
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     },
+//     [title, department, description, media, location, navigate]
+//   );
+
+    const handleSubmit = useCallback(
+  async (e) => {
+    e.preventDefault();
+
+    if (!title || !department || !description) {
+      setError('All required fields must be filled.');
+      return;
+    }
+
+    if (description.length < 20) {
+      setError('Description must be at least 20 characters.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
+
+    let finalLocation = location;
+
+    // Retry location if not available
+    if (!location.lat || !location.lng) {
       try {
-        const controller = new AbortController();
-        const response = await fetch(`${BASE_URL}complaints/`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-          signal: controller.signal,
-        });
-
-        let data = {};
-        try {
-          data = await response.json();
-        } catch {
-          setError('Failed to parse server response.');
-          return;
-        }
-
-        if (response.ok) {
-          setSuccess(data.message || 'Complaint submitted successfully.');
-          resetForm();
-          setTimeout(() => {
-            navigate('/dashboard');
-          }, 1000);
-        } else {
-          setError(data.error || 'Failed to submit complaint.');
-        }
-      } catch (err) {
-        if (err.name === 'AbortError') return;
-        setError('Network error. Please try again.');
-      } finally {
-        setIsLoading(false);
+        finalLocation = await getLocation();
+        setLocation(finalLocation);
+      } catch {
+        // Location optional → continue
+        console.warn('Location unavailable, submitting without it');
       }
-    },
-    [title, department, description, media, location, navigate]
-  );
+    }
+
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('Title', title);
+    formData.append('Department', department);
+    formData.append('Description', description);
+
+    if (finalLocation.lat && finalLocation.lng) {
+      formData.append('Latitude', String(finalLocation.lat));
+      formData.append('Longitude', String(finalLocation.lng));
+    }
+
+    media.forEach((file) => formData.append('media', file));
+
+    try {
+      const response = await fetch(`${BASE_URL}complaints/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('Complaint submitted successfully.');
+        resetForm();
+        setTimeout(() => navigate('/dashboard'), 1000);
+      } else {
+        setError(data.error || 'Failed to submit complaint.');
+      }
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  [title, department, description, media, location, navigate]
+);
+
 
   const handleFileChange = (e) => {
     setError('');
@@ -355,13 +460,21 @@ function Complaints() {
               </div>
             </div>
 
-            {locationError && (
+            {/* {locationError && (
               <div className="p-3 bg-yellow-50 border border-yellow-400 rounded-md">
                 <p className="text-yellow-700">
                   {locationError} please give location access. Please refresh the page to give access
                 </p>
               </div>
-            )}
+            )} */}
+            {locationError && (
+  <div className="p-3 bg-yellow-50 border border-yellow-400 rounded-md">
+    <p className="text-yellow-700">
+      Location access is optional. Your complaint can still be submitted.
+    </p>
+  </div>
+)}
+
 
             <div className="flex justify-center pt-4">
               <button

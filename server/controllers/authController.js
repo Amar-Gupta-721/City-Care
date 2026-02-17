@@ -15,7 +15,7 @@ export const localRegister = async (req, res) => {
   console.log("user data is : ", req.body);
   try {
     const { name, email, password, role } = req.body;
-    console.log("Inside try block user data is : ", req.body);
+    // console.log("Inside try block user data is : ", req.body);
     if (!email || !password)
       return res.status(400).json({ message: "Email & password required" });
 
@@ -27,9 +27,9 @@ export const localRegister = async (req, res) => {
     const hashed = await bcrypt.hash(password, salt);
 
     const user = await User.create({ name, email, password: hashed, role });
-    console.log("user is : ", user);
+    // console.log("user is : ", user);
     const token = generateToken(user);
-    console.log("token is : ",token);
+    // console.log("token is : ",token);
 
     res.status(201).json({
       token,
@@ -48,7 +48,7 @@ export const localLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    console.log("user on login is : ", user);
+    // conssole.log("user on login is : ", user);
     if (!user) return res.status(400).json({ message: 'Invalid email or password' });
 
     const valid = user.password ? await bcrypt.compare(password, user.password) : false;
@@ -74,10 +74,10 @@ export const googleSignIn = async (req, res) => {
 
     let user = await User.findOne({ email });
     if (!user) {
-      console.log("new user is created .");
+      // console.log("new user is created .");
       user = await User.create({ name, email, googleId, avatar: picture, isVerified: true });
     } else if (!user.googleId) {
-      console.log("user is updated by google login");
+      // console.log("user is updated by google login");
       user.googleId = googleId;
       user.isVerified = true;
       await user.save();
