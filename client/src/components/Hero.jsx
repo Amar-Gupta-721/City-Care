@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 function Hero() {
 
   const token = localStorage.getItem('token');
+  const role = localStorage.getItem("role")?.toLowerCase();
 
   return (
     <div>
@@ -68,7 +69,14 @@ function Hero() {
       <h1 className='text-4xl font-semibold text-white font-sans pb-4'>Join the Movement</h1>
       <p className='text-xl text-white font-sans'>Together, we can make our cities better places to live.</p>
       {token ? (
-        <Link to="/dashboard">
+        <Link 
+        // to="/dashboard"
+        to={
+        role === "officer"
+          ? "/officer/dashboard"
+          : "/dashboard"
+      }
+        >
           <Button
             text="Go to Dashboard"
             color="bg-white"
@@ -86,7 +94,6 @@ function Hero() {
           />
         </Link>
       )}
-
     </div>
 
 

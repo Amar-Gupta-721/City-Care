@@ -8,17 +8,17 @@ import { useNavigate } from "react-router-dom";
 
 function App() {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  // const token = localStorage.getItem("token");
+  // const role = localStorage.getItem("role");
 
-  // Redirect officer away from home
-  useEffect(() => {
-    if (token && role === "officer") {
-      navigate("/officer/dashboard");
-    }
-  }, [token, role, navigate]);
+  // // Redirect officer away from home
+  // useEffect(() => {
+  //   if (token && role === "officer") {
+  //     navigate("/officer/dashboard");
+  //   }
+  // }, [token, role, navigate]);
 
   return (
     <>

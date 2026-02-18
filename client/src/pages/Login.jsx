@@ -28,10 +28,21 @@ function Login() {
       if (res.status === 200) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.user.role);
+
+        const role = data.user.role?.toLowerCase();
+
         setSuccess(data.message);
         setEmail("");
         setPassword("");
-        setTimeout(() => navigate("/dashboard"), 2000);
+
+        // setTimeout(() => navigate("/dashboard"), 2000);
+        
+        // Redirect based on role
+        if (role === "officer") {
+          navigate("/officer/dashboard", { replace: true });
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       } else {
         setError(data.message || "Login failed");
       }
@@ -56,8 +67,17 @@ function Login() {
       if (res.status === 200) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.user.role); // good practice
+
         setSuccess("Logged in successfully with Google!");
-        setTimeout(() => navigate("/dashboard"), 1500);
+
+        // setTimeout(() => navigate("/dashboard"), 1500);
+        const role = data.user.role?.toLowerCase();
+
+        if (role === "officer") {
+          navigate("/officer/dashboard", { replace: true });
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       } else {
         setError(data.error || "Google login failed");
       }
@@ -87,7 +107,7 @@ function Login() {
           width: "300",
           type: "standard",
           shape: "pill",
-        }
+        },
       );
     };
 

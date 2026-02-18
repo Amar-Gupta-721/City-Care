@@ -15,6 +15,8 @@ import OfficerDashboard from './pages/officer/OfficerDashboard.jsx'
 import {GoogleOAuthProvider} from '@react-oauth/google'
 import OfficerOnboarding from './pages/officer/onboarding.jsx'
 import AdminLogin from './pages/officer/adminLogin.jsx'
+import Unauthorized from './pages/Unauthorized.jsx'
+import RequireAuth from './components/RequireAuth.jsx'
 
 import ForgotPassword from './pages/ForgotPassword.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
@@ -23,20 +25,51 @@ import ResetPassword from './pages/ResetPassword.jsx';
 const router = createBrowserRouter([
   {path: '/', element: <App />},
   {path: '/login', element: <Login />},
-  {path: '*', element: <NotFound />},
+  // {path: '*', element: <NotFound />},
   {path: '/register', element: <Register />},
-
   { path: '/forgot-password', element: <ForgotPassword /> },   // ✅
   { path: '/reset-password/:token', element: <ResetPassword /> }, // ✅
-
-  {path: '/dashboard', element: <Dashboard />},
-  {path: '/complaint', element:<ComplaintForm />},
+  
   {path: 'officer/login', element: <Officerslogin />},
   {path: 'officer/register', element: <Officerrequest />},
-  {path: '/admin', element: <AdminDashboard />},
   {path: '/admin/login', element: <AdminLogin />},
-  {path: '/officer/dashboard', element: <OfficerDashboard />},
-  {path: '/officer/onboarding', element: <OfficerOnboarding />}
+
+  { path: '/unauthorized', element: <Unauthorized /> },
+
+   // 👤 USER Protected Routes
+  {
+    element: <RequireAuth allowedRole="citizen" />,
+    children: [
+      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/complaint', element: <ComplaintForm /> },
+    ]
+  },
+
+  // 👮 OFFICER Protected Routes
+  {
+    element: <RequireAuth allowedRole="officer" />,
+    children: [
+      { path: '/officer/dashboard', element: <OfficerDashboard /> },
+      { path: '/officer/onboarding', element: <OfficerOnboarding /> },
+    ]
+  },
+
+  // 🛡 ADMIN Protected Routes
+  {
+    element: <RequireAuth allowedRole="admin" />,
+    children: [
+      { path: '/admin', element: <AdminDashboard /> },
+    ]
+  },
+
+  // ❌ 404
+  { path: '*', element: <NotFound /> }
+
+  // {path: '/dashboard', element: <Dashboard />},
+  // {path: '/complaint', element:<ComplaintForm />},
+  // {path: '/admin', element: <AdminDashboard />},
+  // {path: '/officer/dashboard', element: <OfficerDashboard />},
+  // {path: '/officer/onboarding', element: <OfficerOnboarding />}
 ])
 
 // if (import.meta.env.VITE_GOOGLE_CLIENT_ID) {

@@ -108,6 +108,14 @@ const OfficerDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+
+  navigate("/officer/login", { replace: true });
+};
+
+
   useEffect(() => {
     fetchOfficerProfile();
   }, []);
@@ -118,7 +126,15 @@ const OfficerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f9f7f3] to-[#F1EFEC] text-gray-800">
-      <OfficerHeader name={officer.name} department={officer.department} />
+      <OfficerHeader name={officer.name} department={officer.department} onLogout={handleLogout}/>
+      <div className="flex justify-end max-w-6xl mx-auto px-6 pt-6">
+  <button
+    onClick={handleLogout}
+    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition shadow"
+  >
+    Logout
+  </button>
+</div>
       <main className="max-w-6xl mx-auto px-6 py-10">
         {error && (
           <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm">
