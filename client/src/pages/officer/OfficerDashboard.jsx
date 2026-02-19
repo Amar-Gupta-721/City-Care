@@ -13,7 +13,8 @@ const OfficerDashboard = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+  const BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
   const fetchComplaintsByDepartment = async (officerId) => {
     try {
       const res = await fetch(`${BASE_URL}complaints/department/${officerId}`, {
@@ -84,13 +85,12 @@ const OfficerDashboard = () => {
       const data = await res.json();
 
       if (res.ok) {
-
         setComplaints((prevComplaints) =>
           prevComplaints.map((complaint) =>
             complaint._id === complaintId
               ? { ...complaint, Status: "Resolved" }
-              : complaint
-          )
+              : complaint,
+          ),
         );
 
         if (selectedComplaint && selectedComplaint._id === complaintId) {
@@ -109,12 +109,11 @@ const OfficerDashboard = () => {
   };
 
   const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
 
-  navigate("/officer/login", { replace: true });
-};
-
+    navigate("/officer/login", { replace: true });
+  };
 
   useEffect(() => {
     fetchOfficerProfile();
@@ -126,15 +125,12 @@ const OfficerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f9f7f3] to-[#F1EFEC] text-gray-800">
-      <OfficerHeader name={officer.name} department={officer.department} onLogout={handleLogout}/>
-      <div className="flex justify-end max-w-6xl mx-auto px-6 pt-6">
-  <button
-    onClick={handleLogout}
-    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition shadow"
-  >
-    Logout
-  </button>
-</div>
+      <OfficerHeader
+        name={officer.name}
+        department={officer.department}
+        onLogout={handleLogout}
+      />
+      <div className="flex justify-end max-w-6xl mx-auto px-6 pt-6"></div>
       <main className="max-w-6xl mx-auto px-6 py-10">
         {error && (
           <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm">
