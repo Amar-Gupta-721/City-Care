@@ -35,7 +35,7 @@ function Register() {
 
     if (res.ok || emailFail) {
   localStorage.setItem('token', data.token);
-   localStorage.setItem('role', data.user.role);
+  localStorage.setItem('role', data.user.role);
   if (emailFail) {
     setsuccess('Registered successfully, but verification email failed to send.');
   } else {
@@ -49,8 +49,6 @@ function Register() {
 } else {
   seterror(data.message || 'Registration failed');
 }
-
-
   } catch (err) {
     seterror('Registration failed. Please try again.');
   }
@@ -72,6 +70,7 @@ function Register() {
 
       if (res.status === 200) {
         localStorage.setItem('token', data.token);
+        
         localStorage.setItem('role', data.user.role);
         setsuccess('Logged in successfully with Google!');
         // setTimeout(() => navigate('/dashboard'), 1500);
