@@ -1,91 +1,99 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import RegisterImage from '../assets/signup.jpg';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import RegisterImage from "../assets/signup.jpg";
 
 function Register() {
-  const [name, setname] = useState('');
-  const [email, setemail] = useState('');
-  const [password, setpassword] = useState('');
-  const [error, seterror] = useState('');
-  const [success, setsuccess] = useState('');
+  const [name, setname] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [error, seterror] = useState("");
+  const [success, setsuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/';
+  const BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/";
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  seterror('');
-  setsuccess('');
+    e.preventDefault();
+    seterror("");
+    setsuccess("");
+    setLoading(true); // START LOADING
 
-  try {
-    const res = await fetch(`${BASE_URL}auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        role: 'citizen'
-      }),
-    });
+    try {
+      const res = await fetch(`${BASE_URL}auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role: "citizen",
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    const emailFail = data.error && data.error.toLowerCase().includes('failed to send email');
+      const emailFail =
+        data.error && data.error.toLowerCase().includes("failed to send email");
 
-    if (res.ok || emailFail) {
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('role', data.user.role);
-  if (emailFail) {
-    setsuccess('Registered successfully, but verification email failed to send.');
-  } else {
-    setsuccess('Registered successfully!');
-  }
-  setname('');
-  setemail('');
-  setpassword('');
-  // setTimeout(() => navigate('/dashboard'), 1500);
-  navigate('/dashboard', { replace: true }); // remove timeout
-} else {
-  seterror(data.message || 'Registration failed');
-}
-  } catch (err) {
-    seterror('Registration failed. Please try again.');
-  }
-};
+      if (res.ok || emailFail) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.user.role);
 
+        if (emailFail) {
+          setsuccess(
+            "Registered successfully, but verification email failed to send.",
+          );
+        } else {
+          setsuccess("Registered successfully!");
+        }
+        setname("");
+        setemail("");
+        setpassword("");
+        setTimeout(() => navigate('/dashboard'), 9500);
+        // navigate("/dashboard", { replace: true });
+      } else {
+        seterror(data.message || "Registration failed");
+        setLoading(false); // STOP LOADING if failed
+      }
+    } catch (err) {
+      seterror("Registration failed. Please try again.");
+      setLoading(false); // STOP LOADING on error
+    }
+  };
 
   const handleGoogleLogin = async (response) => {
-    seterror('');
-    setsuccess('');
+    seterror("");
+    setsuccess("");
     try {
       const id_token = response.credential;
       const res = await fetch(`${BASE_URL}auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: id_token }),
       });
 
       const data = await res.json();
 
       if (res.status === 200) {
-        localStorage.setItem('token', data.token);
-        
-        localStorage.setItem('role', data.user.role);
-        setsuccess('Logged in successfully with Google!');
+        localStorage.setItem("token", data.token);
+
+        localStorage.setItem("role", data.user.role);
+        setsuccess("Logged in successfully with Google!");
         // setTimeout(() => navigate('/dashboard'), 1500);
-        navigate('/dashboard', { replace: true });
+        navigate("/dashboard", { replace: true });
       } else {
-        seterror(data.error || 'Google login failed');
+        seterror(data.error || "Google login failed");
       }
     } catch {
-      seterror('Google login failed. Please try again.');
+      seterror("Google login failed. Please try again.");
     }
   };
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
@@ -93,19 +101,19 @@ function Register() {
     script.onload = () => {
       window.google.accounts.id.initialize({
         client_id:
-          '802392548098-rojudnh96bvrgm42fpp05k2jm8ugrl90.apps.googleusercontent.com',
+          "802392548098-rojudnh96bvrgm42fpp05k2jm8ugrl90.apps.googleusercontent.com",
         callback: handleGoogleLogin,
       });
 
       window.google.accounts.id.renderButton(
-        document.getElementById('googleSignInDiv'),
+        document.getElementById("googleSignInDiv"),
         {
-          theme: 'outline',
-          size: 'large',
-          width: '300',
-          type: 'standard', 
-          shape: 'pill', 
-        }
+          theme: "outline",
+          size: "large",
+          width: "300",
+          type: "standard",
+          shape: "pill",
+        },
       );
     };
 
@@ -122,7 +130,9 @@ function Register() {
             <span className="bg-primary text-white px-4 py-1 rounded-full text-sm font-semibold">
               CityCare Register
             </span>
-            <h1 className="mt-4 text-4xl font-bold text-text">Create Your Account</h1>
+            <h1 className="mt-4 text-4xl font-bold text-text">
+              Create Your Account
+            </h1>
           </div>
 
           {error && (
@@ -188,9 +198,42 @@ function Register() {
 
             <button
               type="submit"
-              className="w-full bg-primary text-white py-3 rounded-md hover:bg-[#c73f2e] transition font-semibold"
+              disabled={loading}
+              // className="w-full bg-primary text-white py-3 rounded-md hover:bg-[#c73f2e] transition font-semibold"
+              className={`w-full py-3 rounded-md font-semibold transition 
+                ${
+                  loading
+                    ? "bg-gray-100 cursor-not-allowed"
+                    : "bg-primary hover:bg-[#c73f2e] text-white"
+                }`}
             >
-              Register
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-black"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  Loading...
+                </div>
+              ) : (
+                "Register"
+              )}
             </button>
           </form>
 
