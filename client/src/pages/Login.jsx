@@ -43,6 +43,7 @@ function Login() {
         if (role === "officer") {
           navigate("/officer/dashboard", { replace: true });
         } else {
+          
           navigate("/dashboard", { replace: true });
         }
       } else {
