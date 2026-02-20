@@ -51,8 +51,8 @@ function Register() {
         setname("");
         setemail("");
         setpassword("");
-        setTimeout(() => navigate('/dashboard'), 9500);
-        // navigate("/dashboard", { replace: true });
+        // setTimeout(() => navigate('/dashboard'), 9500);
+        navigate("/dashboard", { replace: true });
       } else {
         seterror(data.message || "Registration failed");
         setLoading(false); // STOP LOADING if failed
