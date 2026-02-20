@@ -7,6 +7,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const BASE_URL =
@@ -16,6 +17,7 @@ function Login() {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setLoading(true); // START LOADING
 
     try {
       const res = await fetch(`${BASE_URL}auth/login`, {
@@ -45,9 +47,11 @@ function Login() {
         }
       } else {
         setError(data.message || "Login failed");
+        setLoading(false); // STOP LOADING if failed
       }
     } catch {
       setError("Login failed. Please try again.");
+      setLoading(false); // STOP LOADING on error
     }
   };
 
@@ -188,11 +192,50 @@ function Login() {
               </Link>
             </div>
 
-            <button
+            {/* <button
               type="submit"
               className="w-full bg-primary text-white py-3 rounded-md hover:bg-[#c73f2e] transition font-semibold"
             >
               Login
+            </button> */}
+             <button
+              type="submit"
+              disabled={loading}
+              // className="w-full bg-primary text-white py-3 rounded-md hover:bg-[#c73f2e] transition font-semibold"
+              className={`w-full py-3 rounded-md font-semibold transition 
+                ${
+                  loading
+                    ? "bg-gray-100 cursor-not-allowed"
+                    : "bg-primary hover:bg-[#c73f2e] text-white"
+                }`}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-black"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  Loading...
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
           </form>
 
